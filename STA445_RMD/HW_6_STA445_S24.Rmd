@@ -1,0 +1,191 @@
+---
+title: "STA_445_Assignment_6"
+author: "Myleen"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(mosaicData)
+```
+
+## Problem 1
+Convert the following to date or date/time objects.
+
+a. September 13, 2010.
+```{r}
+p1a <- mdy("September 13, 2010")
+p1a
+class(p1a)
+```
+
+b. Sept 13, 2010.
+```{r}
+p1b <- mdy("September 13, 2010")
+p1b
+class(p1b)
+```
+
+
+c. Sep 13, 2010.
+```{r}
+p1c <- mdy("September 13, 2010")
+p1c
+class(p1c)
+```
+
+d. S 13, 2010. Comment on the month abbreviation needs.
+```{r}
+#incorrect
+#p1d <- mdy("S 13, 2010")
+#p1d
+#class(p1d)
+
+#corrected
+p1d <- mdy("Sep 13, 2010")
+p1d
+class(p1d)
+
+#instead of S it needs to be Sep
+```
+
+e. 07-Dec-1941.
+```{r}
+p1e <- dmy("07-Dec-1941.")
+p1e
+class(p1e)
+```
+
+f. 1-5-1998. Comment on why you might be wrong.
+```{r}
+p1f <- mdy("1-5-1998.")
+p1f
+class(p1f)
+#I might be wrong because both month/day should be double digit and there is overlap between 1 and 12 for both month/day to decide which is which. Therefore, it is best to use abbreviations of letters when naming the months
+```
+
+g. 21-5-1998. Comment on why you know you are correct.
+```{r}
+p1g <- dmy("21-5-1998.")
+p1g
+class(p1g)
+
+# I know I am right because there is no month that is known as 21, therefore I know that it this goes day/month/year
+```
+
+h. 2020-May-5 10:30 am
+```{r}
+p1h <- ymd_hm("2020-May-5 10:30 am")
+p1h
+class(p1h)
+```
+
+
+i. 2020-May-5 10:30 am PDT (ex Seattle)
+```{r}
+p1i<- ymd_hm("2020-May-5 10:30 am",tz= "America/Los_Angeles")
+p1i
+class(p1i)
+```
+
+
+j. 2020-May-5 10:30 am AST (ex Puerto Rico)
+```{r}
+p1j<- ymd_hm("2020-May-5 10:30 am",tz= "America/Puerto_Rico")
+p1j
+class(p1j)
+```
+
+### Problem 2
+
+Using just your date of birth (ex Sep 7, 1998) and today's date calculate the following:
+
+a. Calculate the date of your 64th birthday.
+```{r}
+bday <- mdy("09/30/2004", tz="US/Arizona")
+bday64 <- bday + years(64)
+bday64
+```
+
+b. Calculate your current age (in years). 
+```{r}
+bday %--% now()
+as.period(bday %--% now())
+as.duration(bday %--% now())
+```
+c. Using your result in part (b), calculate the date of your next birthday.
+```{r}
+nextBday <- bday + years(20)
+nextBday
+```
+
+d. The number of _days_ until your next birthday.
+```{r}
+daysUntilBday <- as.period(now() %--% nextBday, unit="day" )
+daysUntilBday
+
+```
+e. The number of _months_ and _days_ until your next birthday.
+```{r}
+monDayUntilBday <- as.period(now()%--%nextBday)
+
+monDayUntilBday
+```
+
+## Problem 3
+
+Suppose you have arranged for a phone call to be at 3 pm on May 8, 2015 at Arizona time. However, the recipient will be in Auckland, NZ. What time will it be there? 
+```{r}
+phonecall <- mdy_hm("May 8, 2015 3:00pm", tz="US/Arizona")
+phonecall
+
+#with_tz(phonecall, tz="UTC")
+with_tz(phonecall, tz="Pacific/Auckland")
+
+
+```
+
+## Problem 4
+
+It turns out there is some interesting periodicity regarding the number of births on particular days of the year.
+
+a. Using the `mosaicData` package, load the data set `Births78` which records the number of children born on each day in the United States in 1978. Because this problem is intended to show how to calculate the information using the `date`, remove all the columns *except* `date` and `births`. 
+
+```{r}
+#view(Births78)
+#load("Births78")
+births78 <- select(Births78, "date", "births")
+head(births78)
+
+```
+
+b. Graph the number of `births` vs the `date` with date on the x-axis. What stands out to you? Why do you think we have this trend?
+
+```{r}
+ggplot(births78, aes(x=date, y=births))+
+  geom_point()
+
+```
+
+c. To test your assumption, we need to figure out the what day of the week each observation is. Use `dplyr::mutate` to add a new column named `dow` that is the day of the week (Monday, Tuesday, etc). This calculation will involve some function in the `lubridate` package and the `date` column.
+```{r}
+new<-births78%>%
+ mutate(dow = wday(births78$date, label=TRUE))
+head(new)
+```
+
+d. Plot the data with the point color being determined by the day of the week variable.
+
+```{r}
+ggplot(new, aes(x=date, y=births, color=dow)) +
+  geom_point()
+```
+
+
+
+
+
+
+
+
