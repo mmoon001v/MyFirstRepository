@@ -1,0 +1,58 @@
+---
+title: "STA 445 HW3"
+author: "Myleen Maldonado"
+date: "2/29/2024"
+output: pdf_document
+---
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readxl)
+
+```
+## Problem 1
+
+Download from GitHub the data file [Example_5.xls](https://github.com/dereksonderegger/444/raw/master/data-raw/Example_5.xls). Open it in Excel and figure out which sheet of data we should import into R. At the same time figure out how many initial rows need to be skipped. Import the data set into a data frame and show the structure of the imported data using the `str()` command. Make sure that your data has $n=31$ observations and the three columns are appropriately named. If you make any modifications to the data file, comment on those modifications.
+```{r}
+#skip 3 rows to get to dataheaders
+data<-read_excel("Example_5.xls", sheet='RawData', range="A5:C36")
+
+str(data)
+```
+## Problem 2
+
+Download from GitHub the data file  [Example_3.xls](https://github.com/dereksonderegger/444/raw/master/data-raw/Example_3.xls). Import the data set into a data frame and show the structure of the imported data using the `tail()` command which shows the last few rows of a data table.  Make sure the Tesla values are `NA` where appropriate and that both `-9999` and `NA` are imported as NA values. If you make any modifications to  the data file, comment on those modifications.
+```{r}
+data<-read_excel("Example_3.xls", sheet='data', range="A1:L34")
+tail(data)
+# modified: bottom row, cells(34: C, D, F, I)
+
+
+
+```
+
+## Problem 3
+
+Download all of the files from GitHub `data-raw/InsectSurveys` directory 
+[here.](https://github.com/dereksonderegger/444/raw/master/data-raw/InsectSurveys) Each month's file contains a sheet contains site level information about each of the sites that was surveyed. The second sheet contains information about the number of each species that was observed at each site. Import the data for each month and create a single `site` data frame with information from each month. Do the same for the `observations`. Document any modifications you make to the data files. Comment on the importance of consistency of your data input sheets.
+
+```{r}
+sites <- 
+  may.site <- read_excel("May.xlsx", sheet=1, range="A1:C6")
+  june.site <- read_excel("June.xlsx", sheet=1,range="A1:C6")
+  july.site <- read_excel("July.xlsx", sheet=1,range="A1:C6")
+  aug.site <- read_excel("August.xlsx", sheet=1,range="A1:C6")
+  sept.site <- read_excel("September.xlsx", sheet=1,range="A1:C6")
+  oct.site <- read_excel("October.xlsx", sheet=1,range="A1:C6")
+
+sites
+
+observations <-
+    may.site <- read_excel("May.xlsx", sheet=2, range="A1:C37")
+  june.site <- read_excel("June.xlsx", sheet=2,range="A1:C37")
+  july.site <- read_excel("July.xlsx", sheet=2,range="A1:C37")
+  aug.site <- read_excel("August.xlsx", sheet=2,range="A1:C37")
+  sept.site <- read_excel("September.xlsx", sheet=2,range="A1:C37")
+  oct.site <- read_excel("October.xlsx", sheet=2,range="A1:C37")
+
+  observations
+```
